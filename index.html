@@ -9,15 +9,92 @@
 </head>
 <body>
     <div class="multi_range_slider">
-        <input type="range" name="min_price" id="left_input" min="0" max="100" value="25">
-        <input type="range" name="max_price" id="right_input" min="0" max="100" value="75">
+        <h1 id="show_result">25-75</h1>
+
+        <input type="range" name="min_price" id="left_input" min="0" max="1000" value="200">
+        <input type="range" name="max_price" id="right_input" min="0" max="1000" value="800">
     
         <div class="slider">
             <div class="track"></div>
-            <div class="range"></div>
-            <div class="thumb left"></div>
-            <div class="thumb right"></div>
+            <div class="range" id="range"></div>
+            <div class="thumb left" id="left_thumb"></div>
+            <div class="thumb right" id="right_thumb"></div>
         </div>
     </div> 
+
+
+    <script>
+        const left_input = document.getElementById('left_input')
+        const right_input = document.getElementById('right_input')
+        
+        const range = document.getElementById('range')
+        const left_thumb = document.getElementById('left_thumb')
+        const right_thumb = document.getElementById('right_thumb')
+
+        var show_result = document.getElementById('show_result')
+
+        function setLeftValue() {
+            var left_input_value = left_input
+            var min = left_input_value.min
+            var max = left_input_value.max
+
+            left_input_value.value = Math.min(parseInt(left_input.value), parseInt(right_input.value))
+            var percent = ((left_input_value.value - min) / (max - min)) * 100
+            
+            
+            show_result.innerText = `${left_input_value.value} - ${right_input.value}`
+            range.style.left = percent + '%'
+            left_thumb.style.left = percent + '%'
+        }
+
+        function setRightValue() {
+            var right_input_value = right_input
+            var min = right_input_value.min
+            var max = right_input_value.max
+
+            right_input_value.value = Math.max(parseInt(right_input.value), parseInt(left_input.value) - 1)
+            var percent = ((right_input_value.value - min) / (max - min)) * 100
+
+            show_result.innerText = `${left_input.value} - ${right_input_value.value}` 
+            range.style.right = (100 - percent) + '%'
+            right_thumb.style.right = (100 - percent) + '%'
+        }
+
+        left_input.addEventListener('input', setLeftValue)
+        right_input.addEventListener('input', setRightValue)
+        setLeftValue()
+        setRightValue()
+
+        // thumb shadow animation
+
+        // left input
+        left_input.addEventListener('mouseover', () => {
+            left_thumb.classList.add('hover')
+        })
+        left_input.addEventListener('mouseout', () => {
+            left_thumb.classList.remove('hover')
+        })
+        left_input.addEventListener('mousedown', () => {
+            left_thumb.classList.add('active')
+        })
+        left_input.addEventListener('mouseup', () => {
+            left_thumb.classList.remove('active')
+        })
+
+        // right input
+        right_input.addEventListener('mouseover', () => {
+            right_thumb.classList.add('hover')
+        })
+        right_input.addEventListener('mouseout', () => {
+            right_thumb.classList.remove('hover')
+        })
+        right_input.addEventListener('mousedown', () => {
+            right_thumb.classList.add('active')
+        })
+        right_input.addEventListener('mouseup', () => {
+            right_thumb.classList.remove('active')
+        })
+
+    </script>
 </body>
 </html>
